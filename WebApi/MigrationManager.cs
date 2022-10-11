@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using WebApi.Data;
 namespace WebApi;
 public static class MigrationManager
@@ -7,11 +6,12 @@ public static class MigrationManager
     {
         using (var scope = webApp.Services.CreateScope())
         {
-            using (var appContext = scope.ServiceProvider.GetRequiredService<ApiDbContext>())
+            // using (var appContext = scope.ServiceProvider.GetRequiredService<ApiDbContext>())
+            using (var appContext = scope.ServiceProvider.GetRequiredService<CqrsDbContext>())
             {
                 try
                 {
-                    appContext.Database.Migrate();
+                    DataSeeder.SeedAuthors(appContext);
                 }
                 catch (Exception ex)
                 {
