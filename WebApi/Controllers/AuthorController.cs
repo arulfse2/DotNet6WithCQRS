@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Features.Author.Commands;
 using WebApi.Features.Author.Queries;
-using WebApi.Models;
+using AutoMapper;
+using WebApi.ViewModels;
 using MediatR;
-using dotnetcqrs.Features.Author.Queries;
 
 namespace WebApi.Controllers;
 
@@ -12,31 +12,35 @@ namespace WebApi.Controllers;
 public class AuthorController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly IMapper _mapper;
     private readonly ILogger<AuthorController> _logger;
 
     public AuthorController(ILogger<AuthorController> logger,
-    IMediator mediator)
+    IMediator mediator, IMapper mapper)
     {
         _logger = logger;
         _mediator = mediator;
+        _mapper = mapper;
     }
 
-    [HttpGet, Route("GetAuthors")]
-    public async Task<IActionResult> Get()
+    [HttpGet, Route("GetAuthors"), ProducesResponseType(typeof(IEnumerable<AuthorVM>), StatusCodes.Status200OK, "application/json")]
+    public async Task<IEnumerable<AuthorVM>> Get()
     {
-        return Ok(await _mediator.Send(new GetAllAuthorsQuery()));
+        var result = await _mediator.Send(new GetAllAuthorsQuery());
+        return _mapper.Map<IList<AuthorVM>>(result);
     }
-    [HttpGet, Route("GetAuthorById")]
-    public async Task<IActionResult> Details([FromQuery] string id)
+    [HttpGet, Route("GetAuthorById"), ProducesResponseType(typeof(AuthorVM), StatusCodes.Status200OK, "application/json")]
+    public async Task<AuthorVM> Details([FromQuery] string id)
     {
-        return Ok(await _mediator.Send(new GetAuthorByIdQuery() { Id = id }));
+        var result = await _mediator.Send(new GetAuthorByIdQuery() { Id = id });
+        return _mapper.Map<AuthorVM>(result);
     }
     [HttpPost, Route("AddAuthor")]
     public async Task<IActionResult> Create([FromBody] CreateAuthorCommand command)
     {
         return Ok(await _mediator.Send(command));
     }
-    [HttpPost, Route("UpdateAuthor")]
+    [HttpPut, Route("UpdateAuthor")]
     public async Task<IActionResult> Edit([FromQuery] string id, [FromBody] UpdateAuthorCommand command)
     {
         if (id != command.Id)
@@ -47,7 +51,7 @@ public class AuthorController : ControllerBase
         return Ok(await _mediator.Send(command));
     }
 
-    [HttpGet, Route("DeleteAuthor")]
+    [HttpDelete, Route("DeleteAuthor")]
     public async Task<IActionResult> Delete([FromQuery] string id)
     {
         return Ok(await _mediator.Send(new DeleteAuthorCommand() { Id = id }));

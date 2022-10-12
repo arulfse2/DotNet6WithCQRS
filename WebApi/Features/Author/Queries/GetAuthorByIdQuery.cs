@@ -1,17 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using WebApi.Models;
 using WebApi.Repository;
 using MediatR;
 
-namespace dotnetcqrs.Features.Author.Queries
+namespace WebApi.Features.Author.Queries
 {
     public class GetAuthorByIdQuery : IRequest<WebApi.Models.Author>
     {
-        public string Id { get; set; }
+        public string Id { get; set; } = String.Empty;
 
         public class GetAuthorByIdQueryHandler : IRequestHandler<GetAuthorByIdQuery, WebApi.Models.Author>
         {

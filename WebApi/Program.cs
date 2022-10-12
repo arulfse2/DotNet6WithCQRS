@@ -11,7 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddDbContext<CqrsDbContext>(options =>
                options.UseInMemoryDatabase(databaseName: "CqrsDb"));
-builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
+builder.Services.AddMediatR(typeof(Program));
+builder.Services.AddAutoMapper(typeof(Program)); 
 builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
 builder.Services.AddScoped<IBookRepository, BookRepository>();
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
