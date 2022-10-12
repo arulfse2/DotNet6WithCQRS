@@ -8,6 +8,7 @@ namespace WebApi.Features.Author.Commands
         public string Id { get; set; } = Guid.Empty.ToString();
         public string FirstName { get; set; } = String.Empty;
         public string LastName { get; set; } = String.Empty;
+         public string MiddleName { get; set; } = String.Empty;
 
         public class UpdateAuthorCommandHandler : IRequestHandler<UpdateAuthorCommand, int>
         {
@@ -26,6 +27,7 @@ namespace WebApi.Features.Author.Commands
 
                 author.FirstName = command.FirstName;
                 author.LastName = command.LastName;
+                author.MiddleName = command.MiddleName;
 
                 return await _authorRepository.UpdateAuthor(author);
             }

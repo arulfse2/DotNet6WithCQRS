@@ -26,13 +26,15 @@ namespace WebApi.Data
                 {
                     Id = auth1,
                     FirstName ="Arulprakash",
-                    LastName ="S"
+                    LastName ="S",
+                    MiddleName ="Subramanian"
                 },
                 new Author
                 {
                     Id = auth2,
                     FirstName ="Saravanan",
-                    LastName ="S"
+                    LastName ="S",
+                    MiddleName ="Subramanian"
                 }
                 };
             context.Authors.AddRange(authors);
